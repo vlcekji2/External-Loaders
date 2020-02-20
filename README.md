@@ -1,6 +1,6 @@
 # External-Loaders
 
-This session help you to integrate QSPI external memory to your Embedded system driven by STM32
+This session helps you to integrate QSPI external memory to your Embedded system driven by STM32
 
 - **Loader_Files**   folder contains files needed for STM32 external loader design.
 - **QSPI driver**    folder contains memory drivers for specific sales types.
