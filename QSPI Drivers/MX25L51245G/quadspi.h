@@ -1,39 +1,4 @@
-/**
-  ******************************************************************************
-  * File Name          : QUADSPI.h
-  * Description        : This file provides code for the configuration
-  *                      of the QUADSPI instances.
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
-  */
-/* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __quadspi_H
-#define __quadspi_H
-#ifdef __cplusplus
- extern "C" {
-#endif
-
-/* Includes ------------------------------------------------------------------*/
-#include "main.h"
-
-/* USER CODE BEGIN Includes */
-
-/* USER CODE END Includes */
-
-extern QSPI_HandleTypeDef hqspi;
-
 /* USER CODE BEGIN Private defines */
-/* USER CODE END Private defines */
 
 typedef struct {
   uint32_t FlashSize;          /*!< Size of the flash */
@@ -50,6 +15,10 @@ uint8_t CSP_QSPI_WriteMemory(uint8_t* buffer, uint32_t address, uint32_t buffer_
 uint8_t CSP_QSPI_EnableMemoryMappedMode(void);
 uint8_t CSP_QSPI_Erase_Chip (void);
 uint8_t CSP_QSPI_GetInfo    (QSPI_Info* pInfo);
+
+/* USER CODE END Private defines */
+
+
 
 
 /* USER CODE BEGIN Prototypes */
@@ -78,18 +47,3 @@ uint8_t CSP_QSPI_GetInfo    (QSPI_Info* pInfo);
 #define DISABLE_QIP_MODE 0xf5
 
 /* USER CODE END Prototypes */
-
-#ifdef __cplusplus
-}
-#endif
-#endif /*__ quadspi_H */
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
