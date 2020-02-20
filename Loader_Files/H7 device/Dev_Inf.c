@@ -11,7 +11,7 @@ __root struct StorageInfo const StorageInfo  =  {
 #else
 struct StorageInfo const StorageInfo  =  {
 #endif
-   "STM32_external loader", 	 	 // Device Name + version number
+   "STM32_external_loader", 	 	 // Device Name + version number
    NOR_FLASH,                  					 // Device Type
    0x90000000,                						 // Device Start Address
    MEMORY_FLASH_SIZE,                 						 // Device Size in Bytes (512Mbits)
