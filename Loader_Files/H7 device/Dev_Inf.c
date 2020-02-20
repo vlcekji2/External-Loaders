@@ -9,17 +9,17 @@
 #if defined (__ICCARM__)
 __root struct StorageInfo const StorageInfo  =  {
 #else
-struct StorageInfo const StorageInfo  =  {
+struct StorageInfo const StorageInfo = {
 #endif
-   "STM32_external_loader", 	 	 // Device Name + version number
-   NOR_FLASH,                  					 // Device Type
-   0x90000000,                						 // Device Start Address
-   MEMORY_FLASH_SIZE,                 						 // Device Size in Bytes (512Mbits)
-   MEMORY_PAGE_SIZE,                 						 // Programming Page Size 16Bytes
-   0xFF,                       							 // Initial Content of Erased Memory
-// Specify Size and Address of Sectors (view example below)
-   (MEMORY_FLASH_SIZE/MEMORY_SECTOR_SIZE),(uint32_t) MEMORY_SECTOR_SIZE,     				 // Sector Num : 128 ,Sector Size: 64KBytes
-   0x00000000, 0x00000000,
+		"STM32F769_disco_CSP", 	 	         // Device Name + version number
+		NOR_FLASH,                  		 // Device Type
+		0x90000000,                			 // Device Start Address
+		MEMORY_FLASH_SIZE,                 	 // Device Size in Bytes
+		MEMORY_PAGE_SIZE,                    // Programming Page Size
+		0xFF,                                // Initial Content of Erased Memory
 
-};
+		// Specify Size and Address of Sectors (view example below)
+		{ { (MEMORY_FLASH_SIZE / MEMORY_SECTOR_SIZE),  // Sector Numbers,
+				(uint32_t) MEMORY_SECTOR_SIZE },       //Sector Size
 
+				{ 0x00000000, 0x00000000 } } };
