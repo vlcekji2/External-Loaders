@@ -6,7 +6,7 @@ This session helps you to integrate QSPI external memory to your Embedded system
 - **QSPI driver**    folder contains memory drivers for specific sales types.
 - **QSPI testing**   folder includes routines for memory testing.
 
-Manual how to use the files and develop your own external loader is located on website:
+Video tutorial how to use the files and develop your own external loader is located on website:
 
 ....
 
