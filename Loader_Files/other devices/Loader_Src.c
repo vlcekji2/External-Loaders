@@ -34,6 +34,9 @@ int Init(void) {
     SystemClock_Config();
 
     MX_GPIO_Init();
+	
+	__HAL_RCC_QSPI_FORCE_RESET();  //completely reset peripheral
+    __HAL_RCC_QSPI_RELEASE_RESET();
 
 	if (CSP_QUADSPI_Init() != HAL_OK)
 	{
