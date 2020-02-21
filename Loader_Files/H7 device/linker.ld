@@ -160,7 +160,7 @@ SECTIONS
   
     .Dev_info :
   {
-	KEEP(Src/Dev_Inf.o ( .rodata* ))
+	KEEP(*Dev_Inf.o ( .rodata* ))
   } :SgInfo
   
   
