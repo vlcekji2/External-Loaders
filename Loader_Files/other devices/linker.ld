@@ -1,11 +1,6 @@
 /*
 *****************************************************************************
-**
-
-**  File        : stm32_flash.ld
-**
-**  Abstract    : Linker script for STM32F769NI Device with
-**                2048KByte FLASH, 512KByte RAM
+**  File        : linker.ld
 **
 **                Set heap size, stack size and stack location according
 **                to application requirements.
@@ -13,16 +8,6 @@
 **                Set memory bank area and size if external memory is used.
 **
 **  Target      : STMicroelectronics STM32
-**
-**
-**  Distribution: The file is distributed as is, without any warranty
-**                of any kind.
-**
-**  (c)Copyright Atollic AB.
-**  You may use this file as-is or modify it according to the needs of your
-**  project. This file may only be built (assembled or compiled and linked)
-**  using the Atollic TrueSTUDIO(R) product. The use of this file together
-**  with other tools than Atollic TrueSTUDIO(R) is not permitted.
 **
 *****************************************************************************
 */
@@ -34,7 +19,7 @@ ENTRY(Init)
 PHDRS {Loader PT_LOAD ; SgInfo PT_LOAD ; }
 
 /* Highest address of the user mode stack */
-_estack = 0x20080000;    /* end of RAM */
+_estack = ORIGIN(RAM) + LENGTH(RAM);    /* end of RAM */
 /* Generate a link error if heap and stack don't fit into RAM */
 _Min_Heap_Size = 0x200 ;      /* required amount of heap  */
 _Min_Stack_Size = 0x400 ; /* required amount of stack */

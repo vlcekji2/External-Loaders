@@ -53,7 +53,7 @@ uint8_t CSP_QSPI_Erase_Chip(void) {
 	/* Erasing Sequence --------------------------------- */
 	sCommand.Instruction = CHIP_ERASE_CMD;
 	sCommand.InstructionMode = QSPI_INSTRUCTION_1_LINE;
-	sCommand.AddressSize = QSPI_ADDRESS_24_BITS;
+	sCommand.AddressSize = QSPI_ADDRESS_32_BITS;
 	sCommand.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
 	sCommand.DdrMode = QSPI_DDR_MODE_DISABLE;
 	sCommand.DdrHoldHalfCycle = QSPI_DDR_HHC_ANALOG_DELAY;
@@ -148,27 +148,29 @@ static uint8_t QSPI_WriteEnable(void) {
 uint8_t QSPI_Configuration(void) {
 
 	QSPI_CommandTypeDef sCommand;
-	uint8_t test_buffer[4] = { 0 };
-	/*read status register*/
-	sCommand.InstructionMode = QSPI_INSTRUCTION_1_LINE;
-	sCommand.Instruction = READ_STATUS_REG_CMD;
-	sCommand.AddressMode = QSPI_ADDRESS_NONE;
-	sCommand.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
-	sCommand.DataMode = QSPI_DATA_1_LINE;
-	sCommand.DummyCycles = 0;
-	sCommand.DdrMode = QSPI_DDR_MODE_DISABLE;
-	sCommand.DdrHoldHalfCycle = QSPI_DDR_HHC_ANALOG_DELAY;
-	sCommand.SIOOMode = QSPI_SIOO_INST_EVERY_CMD;
-	sCommand.NbData = 1;
+	  uint8_t reg;
 
-	if (HAL_QSPI_Command(&hqspi, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE)
-			!= HAL_OK) {
-		return HAL_ERROR;
-	}
-	if (HAL_QSPI_Receive(&hqspi, test_buffer,
-	HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK) {
-		return HAL_ERROR;
-	}
+
+	/*enter 4 byte address*/
+		sCommand.InstructionMode = QSPI_INSTRUCTION_1_LINE;
+		sCommand.Instruction = ENTER_4_BYTE_ADD_CMD;
+		sCommand.AddressMode = QSPI_ADDRESS_NONE;
+		sCommand.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
+		sCommand.DataMode = QSPI_DATA_NONE;
+		sCommand.DummyCycles = 0;
+		sCommand.DdrMode = QSPI_DDR_MODE_DISABLE;
+		sCommand.DdrHoldHalfCycle = QSPI_DDR_HHC_ANALOG_DELAY;
+		sCommand.SIOOMode = QSPI_SIOO_INST_EVERY_CMD;
+		sCommand.NbData = 0;
+
+		if (HAL_QSPI_Command(&hqspi, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE)
+				!= HAL_OK) {
+			return HAL_ERROR;
+		}
+
+
+
+
 	/*read configuration register*/
 	sCommand.InstructionMode = QSPI_INSTRUCTION_1_LINE;
 	sCommand.Instruction = READ_CONFIGURATION_REG_CMD;
@@ -185,34 +187,41 @@ uint8_t QSPI_Configuration(void) {
 			!= HAL_OK) {
 		return HAL_ERROR;
 	}
-	if (HAL_QSPI_Receive(&hqspi, &(test_buffer[1]),
+
+
+	if (HAL_QSPI_Receive(&hqspi, &reg,
 	HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK) {
 		return HAL_ERROR;
 	}
-	/*modify buffer to enable quad mode*/
-	test_buffer[0] |= 0x40;
+
+
+
+	if (QSPI_WriteEnable() != HAL_OK) {
+
+			return HAL_ERROR;
+		}
+
 
 	/*set dummy cycles*/
-	test_buffer[1] |= 0xC0;
+	MODIFY_REG(reg, 0xF0, (DUMMY_CLOCK_CYCLES_READ_QUAD << POSITION_VAL(0xF0)));
 
 	sCommand.InstructionMode = QSPI_INSTRUCTION_1_LINE;
-	sCommand.AddressSize = QSPI_ADDRESS_24_BITS;
 	sCommand.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
 	sCommand.DdrMode = QSPI_DDR_MODE_DISABLE;
 	sCommand.DdrHoldHalfCycle = QSPI_DDR_HHC_ANALOG_DELAY;
 	sCommand.SIOOMode = QSPI_SIOO_INST_EVERY_CMD;
-	sCommand.Instruction = WRITE_STATUS_REG_CMD;
+	sCommand.Instruction = WRITE_VOL_CFG_REG_CMD;
 	sCommand.AddressMode = QSPI_ADDRESS_NONE;
 	sCommand.DataMode = QSPI_DATA_1_LINE;
 	sCommand.DummyCycles = 0;
-	sCommand.NbData = 2;
+	sCommand.NbData = 1;
 
 	if (HAL_QSPI_Command(&hqspi, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE)
 			!= HAL_OK) {
 		return HAL_ERROR;
 	}
 
-	if (HAL_QSPI_Transmit(&hqspi, test_buffer,
+	if (HAL_QSPI_Transmit(&hqspi, &reg,
 	HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK) {
 		Error_Handler();
 		return HAL_ERROR;
@@ -229,7 +238,7 @@ uint8_t CSP_QSPI_EraseSector(uint32_t EraseStartAddress, uint32_t EraseEndAddres
 
 	/* Erasing Sequence -------------------------------------------------- */
 	sCommand.InstructionMode = QSPI_INSTRUCTION_1_LINE;
-	sCommand.AddressSize = QSPI_ADDRESS_24_BITS;
+	sCommand.AddressSize = QSPI_ADDRESS_32_BITS;
 	sCommand.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
 	sCommand.DdrMode = QSPI_DDR_MODE_DISABLE;
 	sCommand.DdrHoldHalfCycle = QSPI_DDR_HHC_ANALOG_DELAY;
@@ -286,13 +295,13 @@ uint8_t CSP_QSPI_WriteMemory(uint8_t* buffer, uint32_t address,uint32_t buffer_s
 	end_addr = address + buffer_size;
 
 	sCommand.InstructionMode = QSPI_INSTRUCTION_1_LINE;
-	sCommand.AddressSize = QSPI_ADDRESS_24_BITS;
+	sCommand.AddressSize = QSPI_ADDRESS_32_BITS;
 	sCommand.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
 	sCommand.DdrMode = QSPI_DDR_MODE_DISABLE;
 	sCommand.DdrHoldHalfCycle = QSPI_DDR_HHC_ANALOG_DELAY;
 	sCommand.SIOOMode = QSPI_SIOO_INST_EVERY_CMD;
 	sCommand.Instruction = QUAD_IN_FAST_PROG_CMD;
-	sCommand.AddressMode = QSPI_ADDRESS_4_LINES;
+	sCommand.AddressMode = QSPI_ADDRESS_1_LINE;
 	sCommand.DataMode = QSPI_DATA_4_LINES;
 	sCommand.NbData = buffer_size;
 	sCommand.Address = address;
@@ -351,12 +360,12 @@ uint8_t CSP_QSPI_EnableMemoryMappedMode(void) {
 	/* Enable Memory-Mapped mode-------------------------------------------------- */
 
 	sCommand.InstructionMode = QSPI_INSTRUCTION_1_LINE;
-	sCommand.AddressSize = QSPI_ADDRESS_24_BITS;
+	sCommand.AddressSize = QSPI_ADDRESS_32_BITS;
 	sCommand.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
 	sCommand.DdrMode = QSPI_DDR_MODE_DISABLE;
 	sCommand.DdrHoldHalfCycle = QSPI_DDR_HHC_ANALOG_DELAY;
 	sCommand.SIOOMode = QSPI_SIOO_INST_EVERY_CMD;
-	sCommand.AddressMode = QSPI_ADDRESS_1_LINE;
+	sCommand.AddressMode = QSPI_ADDRESS_4_LINES;
 	sCommand.DataMode = QSPI_DATA_4_LINES;
 	sCommand.NbData = 0;
 	sCommand.Address = 0;

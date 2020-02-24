@@ -1,12 +1,13 @@
 /* USER CODE BEGIN 0 */
 #include <string.h>
-uint8_t buffer_test[MEMORY_SECTOR_SIZE];
-uint32_t var = 0;
-#define SECTORS_COUNT 1000
+#define SECTORS_COUNT 100
 /* USER CODE END 0 */
 
 
 	/* USER CODE BEGIN 2 */
+	
+	uint8_t buffer_test[MEMORY_SECTOR_SIZE];
+    uint32_t var = 0;
 
 	CSP_QUADSPI_Init();
 
