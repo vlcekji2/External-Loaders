@@ -11,13 +11,13 @@ uint8_t CSP_QSPI_Erase_Chip (void);
 
 /* USER CODE BEGIN Prototypes */
 
-/*MX25L512 memory parameters*/
+/*N25Q256A memory parameters*/
 #define MEMORY_FLASH_SIZE				0x2000000 /* 256 MBits*/
 #define MEMORY_SECTOR_SIZE				0x10000   /* 64kBytes */
 #define MEMORY_PAGE_SIZE				0x100     /* 256 bytes */
 
 
-/*MX25L512 commands */
+/*N25Q256A  commands */
 #define WRITE_ENABLE_CMD 0x06
 #define READ_STATUS_REG_CMD 0x05
 #define ENTER_4_BYTE_ADD_CMD 0xB7
