@@ -50,6 +50,10 @@ int Init(void) {
 		HAL_SuspendTick();
 		return LOADER_FAIL;
 	}
+	
+	/*Trigger read access before HAL_QSPI_Abort() otherwise abort functionality gets stuck*/
+	uint32_t a = *(uint32_t*) 0x90000000;
+	a++;
 
 		HAL_SuspendTick();
 		return LOADER_OK;
