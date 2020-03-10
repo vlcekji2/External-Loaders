@@ -14,7 +14,8 @@
 int Init(void) {
 
 	*(uint32_t*)0xE000EDF0=0xA05F0000; //enable interrupts in debug
-
+    __set_PRIMASK(0);
+	
 	SystemInit();
 
 /* ADAPTATION TO THE DEVICE
@@ -40,14 +41,14 @@ int Init(void) {
 
 	if (CSP_QUADSPI_Init() != HAL_OK)
 	{
-		HAL_SuspendTick();
+		__set_PRIMASK(1); //disable interrupts
 		return LOADER_FAIL;
 	}
 
 
 	if (CSP_QSPI_EnableMemoryMappedMode() != HAL_OK)
 	{
-		HAL_SuspendTick();
+		__set_PRIMASK(1); //disable interrupts
 		return LOADER_FAIL;
 	}
 
@@ -55,7 +56,7 @@ int Init(void) {
 	uint32_t a = *(uint32_t*) 0x90000000;
 	a++;
 	
-		HAL_SuspendTick();
+		__set_PRIMASK(1); //disable interrupts
 		return LOADER_OK;
 }
 
@@ -69,23 +70,22 @@ int Init(void) {
  */
 int Write(uint32_t Address, uint32_t Size, uint8_t* buffer) {
 
-	HAL_ResumeTick();
-
+	__set_PRIMASK(0); //enable interrupts
 
 	if(HAL_QSPI_Abort(&hqspi) != HAL_OK)
 	{
-		HAL_SuspendTick();
+		__set_PRIMASK(1); //disable interrupts
 		return LOADER_FAIL;
 	}
 
 
 	if (CSP_QSPI_WriteMemory((uint8_t*) buffer, (Address & (0x0fffffff)),Size) != HAL_OK)
 	{
-		HAL_SuspendTick();
+		__set_PRIMASK(1); //disable interrupts
 		return LOADER_FAIL;
 	}
 
-	HAL_SuspendTick();
+	__set_PRIMASK(1); //disable interrupts
 	return LOADER_OK;
 }
 
@@ -98,22 +98,22 @@ int Write(uint32_t Address, uint32_t Size, uint8_t* buffer) {
  */
 int SectorErase(uint32_t EraseStartAddress, uint32_t EraseEndAddress) {
 
-	HAL_ResumeTick();
+	__set_PRIMASK(0); //enable interrupts
 
 	if(HAL_QSPI_Abort(&hqspi) != HAL_OK)
 	{
-		HAL_SuspendTick();
+		__set_PRIMASK(1); //disable interrupts
 		return LOADER_FAIL;
 	}
 
 
 	if (CSP_QSPI_EraseSector(EraseStartAddress, EraseEndAddress) != HAL_OK)
 	{
-		HAL_SuspendTick();
+		__set_PRIMASK(1); //disable interrupts
 		return LOADER_FAIL;
 	}
 
-	HAL_SuspendTick();
+	__set_PRIMASK(1); //disable interrupts
 	return LOADER_OK;
 }
 
@@ -129,23 +129,22 @@ int SectorErase(uint32_t EraseStartAddress, uint32_t EraseEndAddress) {
  */
 int MassErase(void) {
 
-	HAL_ResumeTick();
-
+	__set_PRIMASK(0); //enable interrupts
 
 	if(HAL_QSPI_Abort(&hqspi) != HAL_OK)
 	{
-		HAL_SuspendTick();
+		__set_PRIMASK(1); //disable interrupts
 		return LOADER_FAIL;
 	}
 
 
 	if (CSP_QSPI_Erase_Chip() != HAL_OK)
 	{
-		 HAL_SuspendTick();
+		 __set_PRIMASK(1); //disable interrupts
 		return LOADER_FAIL;
 	}
 
-	HAL_SuspendTick();
+	__set_PRIMASK(1); //disable interrupts
 	return LOADER_OK;
 }
 
@@ -235,14 +234,14 @@ uint32_t CheckSum(uint32_t StartAddress, uint32_t Size, uint32_t InitVal) {
  */
 uint64_t Verify(uint32_t MemoryAddr, uint32_t RAMBufferAddr, uint32_t Size,uint32_t missalignement){
 
-	HAL_ResumeTick();
+	__set_PRIMASK(0); //enable interrupts
 	uint32_t VerifiedData = 0, InitVal = 0;
 	uint64_t checksum;
 	Size *= 4;
 
 	if (CSP_QSPI_EnableMemoryMappedMode() != HAL_OK)
 	{
-		HAL_SuspendTick();
+		__set_PRIMASK(1); //disable interrupts
 		return LOADER_FAIL;
 	}
 
@@ -251,12 +250,12 @@ uint64_t Verify(uint32_t MemoryAddr, uint32_t RAMBufferAddr, uint32_t Size,uint3
 	while (Size > VerifiedData) {
 		if (*(uint8_t*) MemoryAddr++
 				!= *((uint8_t*) RAMBufferAddr + VerifiedData)){
-			HAL_SuspendTick();
+			__set_PRIMASK(1); //disable interrupts
 			return ((checksum << 32) + (MemoryAddr + VerifiedData));
 		}
 		VerifiedData++;
 	}
 
-	HAL_SuspendTick();
+	__set_PRIMASK(1); //disable interrupts
 	return (checksum << 32);
 }
