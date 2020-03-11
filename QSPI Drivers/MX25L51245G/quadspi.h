@@ -21,6 +21,7 @@ uint8_t CSP_QSPI_Erase_Chip (void);
 /*MX25L512 commands */
 #define WRITE_ENABLE_CMD 0x06
 #define READ_STATUS_REG_CMD 0x05
+#define READ_FLAG_STATUS_REG_CMD 0x70
 #define WRITE_STATUS_REG_CMD 0x01
 #define SECTOR_ERASE_CMD 0x20
 #define CHIP_ERASE_CMD 0xC7
