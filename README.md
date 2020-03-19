@@ -8,6 +8,6 @@ This session helps you to integrate QSPI external memory to your Embedded system
 
 Video tutorial how to use the files and develop your own external loader is located on website:
 
-....
+https://www.youtube.com/playlist?list=PLnMKNibPkDnHIrq5BICcFhLsmJFI_ytvE
 
 
