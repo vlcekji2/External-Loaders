@@ -14,7 +14,7 @@
 int Init(void) {
 
 	*(uint32_t*)0xE000EDF0=0xA05F0000; //enable interrupts in debug
-	__set_PRIMASK(0);                 
+	                
 
 	SystemInit();
 
@@ -28,8 +28,10 @@ int Init(void) {
  *
  * */
 
-	SCB->VTOR = 0x24000000 | 0x200;;
-
+	SCB->VTOR = 0x24000000 | 0x200;
+	
+	__set_PRIMASK(0); //enable interrupts
+	
 	HAL_Init();
 
     SystemClock_Config();
