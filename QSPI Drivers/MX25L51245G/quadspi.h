@@ -1,7 +1,7 @@
 /* USER CODE BEGIN Private defines */
 
 uint8_t CSP_QUADSPI_Init(void);
-uint8_t CSP_QSPI_EraseSector(uint32_t EraseStartAddress ,uint32_t EraseEndAddress);
+uint8_t CSP_QSPI_EraseSector(uint32_t EraseStartAddress, uint32_t EraseEndAddress);
 uint8_t CSP_QSPI_WriteMemory(uint8_t* buffer, uint32_t address, uint32_t buffer_size);
 uint8_t CSP_QSPI_EnableMemoryMappedMode(void);
 uint8_t CSP_QSPI_Erase_Chip (void);
@@ -12,10 +12,12 @@ uint8_t CSP_QSPI_Erase_Chip (void);
 /* USER CODE BEGIN Prototypes */
 
 /*MX25L512 memory parameters*/
-#define MEMORY_FLASH_SIZE				0x4000000 /* 512 MBits => 64MBytes */
-#define MEMORY_BLOCK_SIZE				0x10000   /* 1024 sectors of 64KBytes */
-#define MEMORY_SECTOR_SIZE				0x1000    /* 16384 subsectors of 4kBytes */
-#define MEMORY_PAGE_SIZE				0x100     /* 262144 pages of 256 bytes */
+#define MEMORY_FLASH_SIZE               0x4000000 /* 512 MBits => 64MBytes */
+#define MEMORY_BLOCK_SIZE               0x10000   /* 1024 sectors of 64KBytes */
+#define MEMORY_SECTOR_SIZE              0x1000    /* 16384 subsectors of 4kBytes */
+#define MEMORY_PAGE_SIZE                0x100     /* 262144 pages of 256 bytes */
+
+#define QUADSPI_MAX_ERASE_TIMEOUT       180000    /* Maximum erase time of the complete flash */
 
 
 /*MX25L512 commands */
@@ -34,5 +36,6 @@ uint8_t CSP_QSPI_Erase_Chip (void);
 #define RESET_ENABLE_CMD 0x66
 #define RESET_EXECUTE_CMD 0x99
 #define DISABLE_QIP_MODE 0xf5
+#define ENABLE_4BYTE_ADDRESS 0xb7
 
 /* USER CODE END Prototypes */

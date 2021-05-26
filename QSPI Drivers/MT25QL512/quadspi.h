@@ -1,7 +1,7 @@
 /* USER CODE BEGIN Private defines */
 
 uint8_t CSP_QUADSPI_Init(void);
-uint8_t CSP_QSPI_EraseSector(uint32_t EraseStartAddress ,uint32_t EraseEndAddress);
+uint8_t CSP_QSPI_EraseSector(uint32_t EraseStartAddress, uint32_t EraseEndAddress);
 uint8_t CSP_QSPI_WriteMemory(uint8_t* buffer, uint32_t address, uint32_t buffer_size);
 uint8_t CSP_QSPI_EnableMemoryMappedMode(void);
 uint8_t CSP_QSPI_Erase_Chip (void);
@@ -13,9 +13,9 @@ uint8_t CSP_QSPI_Erase_Chip (void);
 /* USER CODE BEGIN Prototypes */
 
 /*MT25QL512 memory parameters*/
-#define MEMORY_FLASH_SIZE				0x4000000 /* 512 MBits*/
-#define MEMORY_SECTOR_SIZE				0x10000  /* 64kBytes */
-#define MEMORY_PAGE_SIZE				0x100   /* 256 bytes */
+#define MEMORY_FLASH_SIZE               0x4000000 /* 512 MBits*/
+#define MEMORY_SECTOR_SIZE              0x10000  /* 64kBytes */
+#define MEMORY_PAGE_SIZE                0x100   /* 256 bytes */
 
 
 /*MT25QL512 commands */
